@@ -37,7 +37,7 @@ class MainFragment : Fragment(), BluetoothController.Listener {
             activity?.getSharedPreferences(BluetoothConstants.PREFERENCES, Context.MODE_PRIVATE)
         val mac = pref?.getString(BluetoothConstants.MAC, "")
 
-        bluetoothController = BluetoothController(bAdapter)
+        bluetoothController = BluetoothController(bAdapter, requireContext())
         binding.bList.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_deviceListFragment)
         }
@@ -45,8 +45,9 @@ class MainFragment : Fragment(), BluetoothController.Listener {
             bluetoothController.connect(mac ?: "", this)
         }
         binding.bSend.setOnClickListener {
-            bluetoothController.sendMessage("TX: -20")
-            bluetoothController.readMessage()
+            //bluetoothController.sendMessage("TX: -20")
+            //bluetoothController.readMessage()
+            //bluetoothController.sendMessage("TX: -20")
         }
     }
 

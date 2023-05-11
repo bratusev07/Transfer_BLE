@@ -1,14 +1,21 @@
 package com.example.br_def.bluetooth
 
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
+import android.util.Log
 
-class BluetoothController(private val adapter: BluetoothAdapter) {
+class BluetoothController(private val adapter: BluetoothAdapter, val context: Context) {
     private var connectThread: ConnectThread? = null
 
     fun connect(mac: String, listener: Listener) {
         if (adapter.isEnabled && mac.isNotEmpty()) {
+            try {
+                adapter.cancelDiscovery()
+            } catch (se: SecurityException) {
+                Log.d("MyLog", se.message.toString())
+            }
             val device = adapter.getRemoteDevice(mac)
-            connectThread = ConnectThread(device, listener)
+            connectThread = ConnectThread(device, listener, context)
             connectThread?.start()
         }
     }
@@ -19,6 +26,10 @@ class BluetoothController(private val adapter: BluetoothAdapter) {
 
     fun readMessage() {
         connectThread?.readMessage()
+    }
+
+    fun sendMsg(message: String) {
+        connectThread?.main(message)
     }
 
     fun closeConnection() {
